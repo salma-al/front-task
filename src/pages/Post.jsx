@@ -1,10 +1,15 @@
 import React from 'react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { Box, Text, Link as ChakraLink } from '@chakra-ui/react';
-import { Link as ReactRouterLink, useParams } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 
 export default function Post() {
   const { groupId } = useParams();
+  let { state } = useLocation();
 
   return (
     <>
@@ -20,22 +25,21 @@ export default function Post() {
         </ChakraLink>
       </Box>
 
+      <Text fontSize="xx-large" textAlign="left" fontWeight="700" my={3}>
+        {state?.post?.postName}
+      </Text>
       <Text
-        fontSize="xx-large"
+        fontSize="small"
         textAlign="left"
-        fontWeight="700"
+        fontWeight="600"
+        color="gray.500"
         mt={3}
         mb={10}
       >
-        My Groups
+        {state?.post?.createdAt}
       </Text>
 
-      <Text textAlign="left">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi voluptate
-        harum quo reiciendis, et perferendis accusamus nulla, rerum ad magnam
-        maiores quam blanditiis totam, reprehenderit minima similique excepturi
-        consequatur tempora?
-      </Text>
+      <Text textAlign="left">{state?.post?.content}</Text>
     </>
   );
 }

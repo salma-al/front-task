@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { AddIcon, ArrowBackIcon } from '@chakra-ui/icons';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -11,11 +11,15 @@ import {
   Link as ChakraLink,
 } from '@chakra-ui/react';
 
-import Post from '../components/PostItem';
+import PostItem from '../components/PostItem';
 import CreatePostModal from '../components/CreatePostModal';
+import { PostsContext } from '../providers/PostsProvider';
 
 export default function Posts() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { posts, setPosts } = useContext(PostsContext);
+
+  let { state } = useLocation();
 
   return (
     <>
@@ -43,7 +47,7 @@ export default function Posts() {
             My Posts
           </Text>
           <Text fontSize="large" textAlign="left" fontWeight="600">
-            Group name
+            {state?.name}
           </Text>
         </Box>
 
@@ -53,14 +57,22 @@ export default function Posts() {
         </Button>
       </Flex>
 
-      <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
-      </Grid>
+      {posts.length <= 0 ? (
+        <Text>No posts yet!</Text>
+      ) : (
+        <Grid templateColumns="repeat(5, 1fr)" gap={4}>
+          {posts.map((post, i) => (
+            <PostItem key={i} post={post} />
+          ))}
+        </Grid>
+      )}
 
-      <CreatePostModal isOpen={isOpen} onClose={onClose} />
+      <CreatePostModal
+        isOpen={isOpen}
+        onClose={onClose}
+        posts={posts}
+        setPosts={setPosts}
+      />
     </>
   );
 }

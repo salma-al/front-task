@@ -2,11 +2,15 @@ import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router-dom';
 
-export default function Post() {
+export default function PostItem({ post }) {
   const { groupId } = useParams();
 
   return (
-    <Link style={{ minHeight: '120px' }} to={`/groups/${groupId}/posts/4`}>
+    <Link
+      style={{ minHeight: '120px' }}
+      to={`/groups/${groupId}/posts/${post.id}`}
+      state={{post}}
+    >
       <Box
         border="2px solid"
         borderColor=" gray.300"
@@ -25,9 +29,9 @@ export default function Post() {
           h="100%"
         >
           <Text as="b" fontSize="large">
-            Title
+            {post.postName}
           </Text>
-          <Text color="gray.600">Description</Text>
+          <Text color="gray.600">{post?.content}</Text>
         </Flex>
       </Box>
     </Link>

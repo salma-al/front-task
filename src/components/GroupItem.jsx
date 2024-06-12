@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 import CreateGroupModal from './CreateGroupModal';
 
-export default function Group() {
+export default function GroupItem({ group }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -24,16 +24,27 @@ export default function Group() {
         mb={3}
       >
         <Flex justifyContent="space-between" alignItems="center" gap={8}>
-          <Box textAlign="left" flexGrow="1">
-            <Link to={`/groups/4`} w="100%">
-              <Box>
-                <Text as="b" fontSize="large">
-                  Title
-                </Text>
-                <Text color="gray.600">Description</Text>
-              </Box>
+          <Flex
+            direction="column"
+            justifyContent="space-between"
+            minH="90px"
+            flexGrow="1"
+          >
+            <Link to={`/groups/${group.id}`} w="100%" state={{name: group.groupName}}>
+              <Text textAlign="left" color="gray.600" fontSize="small" mb={4}>
+                {group.createdAt}
+              </Text>
+
+              <Flex textAlign="left">
+                <Box>
+                  <Text as="b" fontSize="large">
+                    {group.groupName}
+                  </Text>
+                  <Text color="gray.600">{group.description}</Text>
+                </Box>
+              </Flex>
             </Link>
-          </Box>
+          </Flex>
 
           <Box>
             <Stack direction="row" spacing={4} align="center">

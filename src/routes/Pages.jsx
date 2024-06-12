@@ -6,6 +6,8 @@ import Post from '../pages/Post';
 import Posts from '../pages/Posts';
 import Groups from '../pages/Groups';
 import ErrorPage from '../pages/Error';
+import { GroupsProvider } from '../providers/GroupsProvider';
+import { PostsProvider } from '../providers/PostsProvider';
 
 export default function Pages() {
   const router = createBrowserRouter([
@@ -34,7 +36,11 @@ export default function Pages() {
 
   return (
     <>
-      <RouterProvider router={router} />
+      <GroupsProvider>
+        <PostsProvider>
+          <RouterProvider router={router} />
+        </PostsProvider>
+      </GroupsProvider>
     </>
   );
 }
