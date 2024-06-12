@@ -6,13 +6,21 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import CreateGroupModal from './CreateGroupModal';
+import { GroupsContext } from '../providers/GroupsProvider';
 
 export default function GroupItem({ group }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { groups, setGroups } = useContext(GroupsContext);
+
+  function handleDeleteButton(groupID) {
+    const newData = groups.filter((i) => i.id !== groupID);
+    setGroups(newData);
+  }
 
   return (
     <>
@@ -30,7 +38,11 @@ export default function GroupItem({ group }) {
             minH="90px"
             flexGrow="1"
           >
-            <Link to={`/groups/${group.id}`} w="100%" state={{name: group.groupName}}>
+            <Link
+              to={`/groups/${group.id}`}
+              w="100%"
+              state={{ name: group.groupName }}
+            >
               <Text textAlign="left" color="gray.600" fontSize="small" mb={4}>
                 {group.createdAt}
               </Text>
@@ -46,24 +58,33 @@ export default function GroupItem({ group }) {
             </Link>
           </Flex>
 
-          <Box>
-            <Stack direction="row" spacing={4} align="center">
-              <Button
-                colorScheme="teal"
-                variant="outline"
-                size="sm"
-                onClick={onOpen}
-              >
-                Edit
-              </Button>
-              <Button colorScheme="red" variant="solid" size="sm">
-                Delete
-              </Button>
-            </Stack>
-          </Box>
+          <Stack direction="row" spacing={4} align="center" flexWrap="wrap">
+            <Button
+              colorScheme="teal"
+              variant="outline"
+              size="sm"
+              onClick={onOpen}
+            >
+              Edit
+            </Button>
+            <Button
+              colorScheme="red"
+              variant="solid"
+              size="sm"
+              onClick={() => handleDeleteButton(group.id)}
+            >
+              Delete
+            </Button>
+          </Stack>
         </Flex>
       </Box>
-      <CreateGroupModal isOpen={isOpen} onClose={onClose} />
+      <CreateGroupModal
+        isOpen={isOpen}
+        onClose={onClose}
+        group={group}
+        setGroups={setGroups}
+        groups={groups}
+      />
     </>
   );
 }

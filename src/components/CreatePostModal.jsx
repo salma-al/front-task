@@ -15,9 +15,10 @@ import {
   Textarea,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 export default function CreatePostModal({ isOpen, onClose, setPosts, posts }) {
-  // const navigate = useNavigate();
+  const { groupId } = useParams();
 
   const {
     register,
@@ -30,6 +31,7 @@ export default function CreatePostModal({ isOpen, onClose, setPosts, posts }) {
     const postData = {
       ...data,
       id: Date.now(),
+      groupId: groupId,
       createdAt: new Date().toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
@@ -65,9 +67,9 @@ export default function CreatePostModal({ isOpen, onClose, setPosts, posts }) {
                     required: 'Name is required',
                   })}
                 />
-                {errors.groupName && (
+                {errors.postName && (
                   <Text fontSize="small" color="red.700" mt={1}>
-                    {errors.groupName?.message}
+                    {errors.postName?.message}
                   </Text>
                 )}
               </FormControl>

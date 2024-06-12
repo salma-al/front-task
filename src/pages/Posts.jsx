@@ -1,6 +1,10 @@
 import React, { useContext } from 'react';
 import { AddIcon, ArrowBackIcon } from '@chakra-ui/icons';
-import { Link as ReactRouterLink, useLocation } from 'react-router-dom';
+import {
+  Link as ReactRouterLink,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 import {
   Box,
   Button,
@@ -12,14 +16,19 @@ import {
 } from '@chakra-ui/react';
 
 import PostItem from '../components/PostItem';
-import CreatePostModal from '../components/CreatePostModal';
 import { PostsContext } from '../providers/PostsProvider';
+import CreatePostModal from '../components/CreatePostModal';
 
 export default function Posts() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { posts, setPosts } = useContext(PostsContext);
+  const { groupId } = useParams();
 
   let { state } = useLocation();
+
+  //filter the posts that only matches the group id from the params
+
+  const filteredPosts = posts.filter((post) => post.groupId === groupId);
 
   return (
     <>
@@ -57,11 +66,20 @@ export default function Posts() {
         </Button>
       </Flex>
 
-      {posts.length <= 0 ? (
+      {filteredPosts.length <= 0 ? (
         <Text>No posts yet!</Text>
       ) : (
-        <Grid templateColumns="repeat(5, 1fr)" gap={4}>
-          {posts.map((post, i) => (
+        <Grid
+          templateColumns={{
+            base: 'repeat(1, 1fr)',
+            sm: 'repeat(2, 1fr)',
+            md: 'repeat(3, 1fr)',
+            lg: 'repeat(4, 1fr)',
+            xl: 'repeat(5, 1fr)',
+          }}
+          gap={4}
+        >
+          {filteredPosts.map((post, i) => (
             <PostItem key={i} post={post} />
           ))}
         </Grid>

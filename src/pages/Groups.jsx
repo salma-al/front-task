@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 
 import GroupItem from '../components/GroupItem';
@@ -11,7 +11,7 @@ export default function Groups() {
 
   const { groups, setGroups } = useContext(GroupsContext);
 
-  console.log(groups);
+  useEffect(() => {}, [groups]);
 
   return (
     <>
@@ -24,10 +24,11 @@ export default function Groups() {
           Create New Group
         </Button>
       </Flex>
-      {groups.length <= 0 ? (
+      {groups?.length <= 0 ? (
         <Text>No groups yet!</Text>
       ) : (
-        groups.map((group, i) => {
+        groups &&
+        groups?.map((group, i) => {
           return <GroupItem key={i} group={group} />;
         })
       )}

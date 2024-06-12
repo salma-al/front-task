@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   FormControl,
@@ -21,37 +21,51 @@ export default function CreateGroupModal({
   onClose,
   setGroups,
   groups,
+  group,
 }) {
-
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm({ mode: 'onChange' });
 
+  useEffect(() => {
+    if (group) {
+      setValue('groupName', group.groupName);
+      setValue('description', group.description);
+    } else {
+      reset();
+    }
+  }, [group, setValue, reset]);
+
   const onSubmit = (data) => {
-    const groupData = {
-      ...data,
-      id: Date.now(),
-      createdAt: new Date().toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      }),
-    };
+    if (group) {
+      const newGroup = groups?.map((g) => {
+        return g.id === group.id ? { ...g, ...data } : g;
+      });
 
-    // console.log(groupData);
-
-    setGroups([...groups, groupData]);
-
+      setGroups(newGroup);
+    } else {
+      const groupData = {
+        ...data,
+        id: Date.now(),
+        createdAt: new Date().toLocaleDateString('en-GB', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        }),
+      };
+      setGroups([...groups, groupData]);
+    }
     reset();
     onClose();
   };
 
   const handleClose = () => {
+    // reset();
     onClose();
-    reset();
   };
 
   return (
@@ -60,7 +74,10 @@ export default function CreateGroupModal({
         <ModalOverlay />
         <ModalContent>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <ModalHeader>Create New Group</ModalHeader>
+            <ModalHeader>
+              {' '}
+              {group ? 'Update Group' : 'Create New Group'}
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
               <FormControl>
@@ -89,7 +106,7 @@ export default function CreateGroupModal({
 
             <ModalFooter>
               <Button type="submit" colorScheme="blue" mr={3}>
-                Save
+                {group ? 'Update' : 'Save'}
               </Button>
               <Button onClick={handleClose}>Cancel</Button>
             </ModalFooter>
